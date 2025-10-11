@@ -2,11 +2,11 @@
 
 Team 1 Gruppenarbeit Softwaretechnik
 
-# Requirements-Dokument – Gesundheits-Tracker (Version 2)
+# Requirements-Dokument – Gesundheits-Tagebuch (Version 2)
 
 ## 1. Projektbeschreibung
 
-Das Team entwickelt eine mobile Gesundheits-Tracker-App, die Nutzer:innen dabei unterstützt, ihr Wohlbefinden ganzheitlich zu überwachen. Die App ermöglicht die Erfassung und Auswertung von Ernährung, Hydration, Schlaf, Bewegung und physischer Kapazität. Ziel ist es, gesundheitsrelevante Daten übersichtlich darzustellen, um Bewusstsein, Motivation und Lebensqualität zu fördern.
+Das Team entwickelt eine mobile Gesundheits-Tagebuch-App, die Nutzer:innen dabei unterstützt, ihr Wohlbefinden ganzheitlich zu überwachen. Die App ermöglicht die Erfassung und Auswertung von Ernährung, Hydration, Schlaf, Bewegung und physischer Kapazität. Ziel ist es, gesundheitsrelevante Daten übersichtlich darzustellen, um Bewusstsein, Motivation und Lebensqualität zu fördern.
 
 ## 2. Stakeholder-Analyse
 
