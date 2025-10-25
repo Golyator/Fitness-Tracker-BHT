@@ -9,7 +9,7 @@ import java.util.Date
 @Dao
 interface ActivityDao {
 
-    @Query("SELECT * FROM activity_records WHERE date = :date")
+    @Query("SELECT * FROM activity_records WHERE date = :date ORDER BY id DESC")
     fun getActivitiesForDate(date: Date): Flow<List<ActivityRecord>>
 
     @Query("SELECT * FROM activity_records WHERE date BETWEEN :startDate AND :endDate")

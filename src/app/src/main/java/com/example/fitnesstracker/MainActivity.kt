@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -86,9 +88,7 @@ fun MainScaffold(
             TopAppBar(
                 title = { Text("Fitness Tracker") },
                 navigationIcon = {
-                    IconButton(onClick = onSettingsClick) {
-                        Icon(Icons.Filled.Settings, contentDescription = "Settings")
-                    }
+                    IconButton(onClick = onSettingsClick) { Icon(Icons.Filled.Settings, contentDescription = "Settings") }
                 },
                 actions = {
                     IconButton(onClick = { /* TODO: Handle calendar click */ }) {
@@ -105,6 +105,7 @@ fun MainScaffold(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainScreenContent(modifier: Modifier = Modifier, viewModel: MainViewModel) {
     val uiState by viewModel.uiState.collectAsState()
@@ -113,6 +114,7 @@ fun MainScreenContent(modifier: Modifier = Modifier, viewModel: MainViewModel) {
     val chartData by viewModel.chartData.collectAsState()
     val selectedDate = SimpleDateFormat("dd. MMMM yyyy", Locale.GERMAN).format(uiState.selectedDate)
     val isToday = isSameDay(uiState.selectedDate, Date())
+    val tabs = listOf(MainScreenTab.ACTIVITIES, MainScreenTab.FOOD)
 
     // --- Dialogs ---
     if (uiState.showCreateActivityDialog) { CreateActivityTypeDialog(onDismiss = viewModel::onDismissCreateActivityDialog, onConfirm = viewModel::createActivityType) }
@@ -120,76 +122,115 @@ fun MainScreenContent(modifier: Modifier = Modifier, viewModel: MainViewModel) {
     if (uiState.showCreateFoodDialog) { CreateFoodTypeDialog(onDismiss = viewModel::onDismissCreateFoodDialog, onConfirm = viewModel::createFoodType) }
     uiState.foodTypeToDelete?.let { DeleteFoodTypeDialog(foodType = it, onDismiss = viewModel::onDismissDeleteFoodType, onConfirm = viewModel::onConfirmDeleteFoodType) }
 
-    LazyColumn(modifier = modifier.fillMaxSize().padding(horizontal = 16.dp)) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
         // Date Navigation
         item {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
                 IconButton(onClick = viewModel::selectPreviousDay) { Icon(Icons.Default.ArrowBack, "Previous Day") }
-                Text(text = selectedDate, modifier = Modifier.padding(horizontal = 16.dp))
+                Text(text = selectedDate, modifier = Modifier.padding(horizontal = 16.dp), style = MaterialTheme.typography.titleMedium)
                 IconButton(onClick = viewModel::selectNextDay, enabled = !isToday) { Icon(Icons.Default.ArrowForward, "Next Day") }
             }
-            Spacer(modifier = Modifier.height(16.dp))
         }
 
         // Statistics Chart
         item {
-            StatisticsChart(
-                modifier = Modifier.fillMaxWidth().height(200.dp),
-                chartData = chartData
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+            ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+                StatisticsChart(modifier = Modifier.fillMaxWidth().height(200.dp).padding(16.dp), chartData = chartData)
+            }
         }
 
         // Daily Calorie Summary
         item {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Verbraucht", fontWeight = FontWeight.Bold)
-                    Text(buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("${uiState.totalCaloriesBurned}") }
-                        append(" kcal")
-                    })
+                    Text("Verbraucht", style = MaterialTheme.typography.labelLarge)
+                    Text(buildAnnotatedString { withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = MaterialTheme.typography.headlineSmall.fontSize)) { append("${uiState.totalCaloriesBurned}") }; append(" kcal") })
                     Text("(${uiState.bmr} + ${uiState.activitiesForSelectedDate.sumOf { it.caloriesBurned }})", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Eingenommen", fontWeight = FontWeight.Bold)
-                    Text("${uiState.totalCaloriesConsumed} kcal", fontWeight = FontWeight.Bold)
+                    Text("Eingenommen", style = MaterialTheme.typography.labelLarge)
+                    Text("${uiState.totalCaloriesConsumed} kcal", fontWeight = FontWeight.Bold, fontSize = MaterialTheme.typography.headlineSmall.fontSize)
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp)); Divider(); Spacer(modifier = Modifier.height(16.dp))
         }
 
-        // Activity Input & List
+        // Tab Layout
         item {
-            ActivityInput(activityTypes = activityTypes, onAddActivity = viewModel::addActivity, onCreateNewActivity = viewModel::onShowCreateActivityDialog, onDeleteActivityType = viewModel::onStartDeleteActivityType)
-            Spacer(modifier = Modifier.height(16.dp))
+            TabRow(selectedTabIndex = uiState.selectedTab.ordinal) {
+                tabs.forEach {
+                    Tab(
+                        selected = uiState.selectedTab == it,
+                        onClick = { viewModel.onTabSelected(it) },
+                        text = { Text(text = if (it == MainScreenTab.ACTIVITIES) "Aktivitäten" else "Nahrungsmittel") }
+                    )
+                }
+            }
         }
-        items(uiState.activitiesForSelectedDate) { activity -> ActivityItem(activity, onDelete = { viewModel.deleteActivity(activity.id) }) }
 
-        item { Spacer(modifier = Modifier.height(16.dp)); Divider(); Spacer(modifier = Modifier.height(16.dp)) }
-
-        // Food Input & List
-        item {
-            FoodInput(foodTypes = foodTypes, onAddFood = viewModel::addFood, onCreateNewFood = viewModel::onShowCreateFoodDialog, onDeleteFoodType = viewModel::onStartDeleteFoodType)
-            Spacer(modifier = Modifier.height(16.dp))
+        // Tab Content
+        when (uiState.selectedTab) {
+            MainScreenTab.ACTIVITIES -> {
+                item {
+                    ElevatedCard(modifier = Modifier.fillMaxWidth().animateItemPlacement()) {
+                        ActivityInput(
+                            modifier = Modifier.padding(16.dp),
+                            activityTypes = activityTypes,
+                            onAddActivity = viewModel::addActivity,
+                            onCreateNewActivity = viewModel::onShowCreateActivityDialog,
+                            onDeleteActivityType = viewModel::onStartDeleteActivityType
+                        )
+                    }
+                }
+                items(uiState.activitiesForSelectedDate, key = { "activity_${it.id}" }) { activity ->
+                    Box(modifier = Modifier.animateItemPlacement(tween(durationMillis = 300))) {
+                        ActivityItem(activity, onDelete = { viewModel.deleteActivity(activity.id) })
+                    }
+                }
+            }
+            MainScreenTab.FOOD -> {
+                item {
+                    ElevatedCard(modifier = Modifier.fillMaxWidth().animateItemPlacement()) {
+                        FoodInput(
+                            modifier = Modifier.padding(16.dp),
+                            foodTypes = foodTypes,
+                            onAddFood = viewModel::addFood,
+                            onCreateNewFood = viewModel::onShowCreateFoodDialog,
+                            onDeleteFoodType = viewModel::onStartDeleteFoodType
+                        )
+                    }
+                }
+                items(uiState.foodForSelectedDate, key = { "food_${it.id}" }) { food ->
+                    Box(modifier = Modifier.animateItemPlacement(tween(durationMillis = 300))) {
+                        FoodItem(food, onDelete = { viewModel.deleteFood(food.id) })
+                    }
+                }
+            }
         }
-        items(uiState.foodForSelectedDate) { food -> FoodItem(food, onDelete = { viewModel.deleteFood(food.id) }) }
     }
 }
 
+
 @Composable
 fun ActivityItem(activity: ActivityRecord, onDelete: () -> Unit) {
-    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-        Column(modifier = Modifier.weight(1f)) { Text(activity.name); Text("${activity.durationMinutes} min, ${activity.intensity.name}", style = MaterialTheme.typography.bodySmall) }
-        Row(verticalAlignment = Alignment.CenterVertically) { Text("${activity.caloriesBurned} kcal"); IconButton(onClick = onDelete) { Icon(Icons.Default.Delete, "Delete Activity") } }
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) { Text(activity.name, style = MaterialTheme.typography.bodyLarge); Text("${activity.durationMinutes} min, ${activity.intensity.name}", style = MaterialTheme.typography.bodySmall, color = Color.Gray) }
+            Row(verticalAlignment = Alignment.CenterVertically) { Text("${activity.caloriesBurned} kcal", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold); IconButton(onClick = onDelete) { Icon(Icons.Default.Delete, "Delete Activity") } }
+        }
     }
 }
 
 @Composable
 fun FoodItem(food: FoodRecord, onDelete: () -> Unit) {
-    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-        Column(modifier = Modifier.weight(1f)) { Text(food.name); Text("Portion: ${food.portionSize.name}", style = MaterialTheme.typography.bodySmall) }
-        Row(verticalAlignment = Alignment.CenterVertically) { Text("${food.calories} kcal"); IconButton(onClick = onDelete) { Icon(Icons.Default.Delete, "Delete Food") } }
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) { Text(food.name, style = MaterialTheme.typography.bodyLarge); Text("Portion: ${food.portionSize.name}", style = MaterialTheme.typography.bodySmall, color = Color.Gray) }
+            Row(verticalAlignment = Alignment.CenterVertically) { Text("${food.calories} kcal", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold); IconButton(onClick = onDelete) { Icon(Icons.Default.Delete, "Delete Food") } }
+        }
     }
 }
 

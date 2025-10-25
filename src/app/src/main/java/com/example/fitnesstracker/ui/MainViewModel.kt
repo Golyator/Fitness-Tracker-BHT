@@ -5,14 +5,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fitnesstracker.data.*
 import com.example.fitnesstracker.data.model.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
-import java.util.concurrent.TimeUnit
 
+enum class MainScreenTab { ACTIVITIES, FOOD }
 data class ChartData(val date: Date, val caloriesBurned: Int, val caloriesConsumed: Int)
 
+@OptIn(ExperimentalCoroutinesApi::class) // Opt-in for flatMapLatest
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val db = AppDatabase.getDatabase(application)
@@ -23,6 +25,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val userSettingsRepo = UserSettingsRepository(application)
 
     private val _selectedDate = MutableStateFlow(getStartOfToday())
+    private val _selectedTab = MutableStateFlow(MainScreenTab.ACTIVITIES)
 
     // --- Flows from Database & DataStore ---
     private val activitiesForDay: Flow<List<ActivityRecord>> = _selectedDate.flatMapLatest { activityDao.getActivitiesForDate(it) }
@@ -39,24 +42,36 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dialogState = combine(_showCreateActivityDialog, _activityTypeToDelete, _showCreateFoodDialog, _foodTypeToDelete) { showCreateAct, toDeleteAct, showCreateFood, toDeleteFood -> DialogState(showCreateAct, toDeleteAct, showCreateFood, toDeleteFood) }
 
-    val uiState: StateFlow<MainUiState> = combine(_selectedDate, activitiesForDay, foodForDay, dialogState, userSettings) { date, acts, foods, dialogs, settings ->
-        MainUiState(user = settings, selectedDate = date, activitiesForSelectedDate = acts, foodForSelectedDate = foods, totalCaloriesConsumed = foods.sumOf { it.calories }, showCreateActivityDialog = dialogs.showCreateActivityDialog, activityTypeToDelete = dialogs.activityTypeToDelete, showCreateFoodDialog = dialogs.showCreateFoodDialog, foodTypeToDelete = dialogs.foodTypeToDelete)
+    private val mainState = combine(_selectedDate, activitiesForDay, foodForDay, dialogState, userSettings) { date, acts, foods, dialogs, settings ->
+        MainUiState(
+            user = settings, 
+            selectedDate = date, 
+            activitiesForSelectedDate = acts, 
+            foodForSelectedDate = foods, 
+            totalCaloriesConsumed = foods.sumOf { it.calories }, 
+            showCreateActivityDialog = dialogs.showCreateActivityDialog, 
+            activityTypeToDelete = dialogs.activityTypeToDelete, 
+            showCreateFoodDialog = dialogs.showCreateFoodDialog, 
+            foodTypeToDelete = dialogs.foodTypeToDelete,
+            selectedTab = MainScreenTab.ACTIVITIES // Placeholder, will be updated
+        )
+    }
+
+    val uiState: StateFlow<MainUiState> = combine(mainState, _selectedTab) { main, tab ->
+        main.copy(selectedTab = tab)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), MainUiState())
 
-    // --- Chart Data Flow (now dynamic based on selectedDate) ---
+    // --- Chart Data Flow ---
     val chartData: StateFlow<List<ChartData>> = _selectedDate.flatMapLatest { date ->
         val endDate = getEndOfDay(date)
         val startDate = getDaysAgo(29, from = date)
-
         val activitiesInRange = activityDao.getActivitiesBetween(startDate, endDate)
         val foodInRange = foodDao.getFoodBetween(startDate, endDate)
-
         combine(activitiesInRange, foodInRange, userSettings) { activities, foods, settings ->
             val activityMap = activities.groupBy { getStartOfDay(it.date) }
             val foodMap = foods.groupBy { getStartOfDay(it.date) }
-            val dateList = (0..29).map { getStartOfDay(getDaysAgo(it, from = date)) }.sorted()
-
-            dateList.map { day ->
+            val datesWithData = (activityMap.keys + foodMap.keys).distinct().sorted()
+            datesWithData.map { day ->
                 val burnedFromActivity = activityMap[day]?.sumOf { it.caloriesBurned } ?: 0
                 val totalBurned = settings.calculateBmr() + burnedFromActivity
                 val consumed = foodMap[day]?.sumOf { it.calories } ?: 0
@@ -65,33 +80,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
     
-    // --- Init Defaults (moved before init block) ---
-    private fun addDefaultActivityTypes() {
-        viewModelScope.launch {
-            if (activityTypes.first().isEmpty()) {
-                activityTypeDao.insert(ActivityType(name = "Wandern", metValue = 3.5))
-                activityTypeDao.insert(ActivityType(name = "Joggen", metValue = 7.0))
-                activityTypeDao.insert(ActivityType(name = "Fahrradfahren", metValue = 6.0))
-                activityTypeDao.insert(ActivityType(name = "Schwimmen", metValue = 8.0))
-            }
-        }
-    }
-
-    private fun addDefaultFoodTypes() {
-        viewModelScope.launch {
-            if (foodTypes.first().isEmpty()) {
-                foodTypeDao.insert(FoodType(name = "Apfel", caloriesMediumPortion = 95))
-                foodTypeDao.insert(FoodType(name = "Banane", caloriesMediumPortion = 105))
-                foodTypeDao.insert(FoodType(name = "Pizza, 1 Stück", caloriesMediumPortion = 285))
-                foodTypeDao.insert(FoodType(name = "Salat", caloriesMediumPortion = 150))
-            }
-        }
-    }
+    // --- Init Defaults ---
+    private fun addDefaultActivityTypes() = viewModelScope.launch { if (activityTypes.first().isEmpty()) { activityTypeDao.insert(ActivityType(name = "Wandern", metValue = 3.5)); activityTypeDao.insert(ActivityType(name = "Joggen", metValue = 7.0)); activityTypeDao.insert(ActivityType(name = "Fahrradfahren", metValue = 6.0)); activityTypeDao.insert(ActivityType(name = "Schwimmen", metValue = 8.0)) } }
+    private fun addDefaultFoodTypes() = viewModelScope.launch { if (foodTypes.first().isEmpty()) { foodTypeDao.insert(FoodType(name = "Apfel", caloriesMediumPortion = 95)); foodTypeDao.insert(FoodType(name = "Banane", caloriesMediumPortion = 105)); foodTypeDao.insert(FoodType(name = "Pizza, 1 Stück", caloriesMediumPortion = 285)); foodTypeDao.insert(FoodType(name = "Salat", caloriesMediumPortion = 150)) } }
 
     init {
         addDefaultActivityTypes()
         addDefaultFoodTypes()
     }
+
+    // --- Tab Selection ---
+    fun onTabSelected(tab: MainScreenTab) { _selectedTab.value = tab }
 
     // --- User Settings Functions ---
     fun saveUserSettings(userSettings: UserSettings) { viewModelScope.launch { userSettingsRepo.saveUserSettings(userSettings) } }
@@ -122,8 +121,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private fun changeDateBy(days: Int) { val calendar = Calendar.getInstance().apply { time = _selectedDate.value }; calendar.add(Calendar.DAY_OF_YEAR, days); _selectedDate.value = calendar.time }
 
     // --- Utility Functions ---
-    private fun calculateCaloriesBurned(metValue: Double, durationMinutes: Int, intensity: Intensity, weightKg: Double): Int { val intensityMultiplier = when (intensity) { Intensity.LOW -> 0.8; Intensity.MEDIUM -> 1.0; Intensity.HIGH -> 1.2 }; return ((metValue * intensityMultiplier * weightKg * 3.5) / 200 * durationMinutes).toInt() }
-    private fun calculateCalories(baseCalories: Int, portionSize: PortionSize): Int { return when (portionSize) { PortionSize.SMALL -> (baseCalories * 0.75).toInt(); PortionSize.MEDIUM -> baseCalories; PortionSize.LARGE -> (baseCalories * 1.25).toInt() } }
+    private fun calculateCaloriesBurned(metValue: Double, durationMinutes: Int, intensity: Intensity, weightKg: Double): Int { val intensityMultiplier = when (intensity) { Intensity.LOW -> 0.9; Intensity.MEDIUM -> 1.0; Intensity.HIGH -> 1.1 }; return ((metValue * intensityMultiplier * weightKg * 3.5) / 200 * durationMinutes).toInt() }
+    private fun calculateCalories(baseCalories: Int, portionSize: PortionSize): Int { return when (portionSize) { PortionSize.SMALL -> (baseCalories * 0.9).toInt(); PortionSize.MEDIUM -> baseCalories; PortionSize.LARGE -> (baseCalories * 1.1).toInt() } }
     private fun getStartOfDay(date: Date): Date = Calendar.getInstance().apply { time = date; set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0) }.time
     private fun getStartOfToday(): Date = getStartOfDay(Date())
     private fun getEndOfDay(date: Date): Date = Calendar.getInstance().apply { time = date; set(Calendar.HOUR_OF_DAY, 23); set(Calendar.MINUTE, 59); set(Calendar.SECOND, 59); set(Calendar.MILLISECOND, 999) }.time

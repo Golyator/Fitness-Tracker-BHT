@@ -14,7 +14,8 @@ data class MainUiState(
     val showCreateActivityDialog: Boolean = false,
     val activityTypeToDelete: ActivityType? = null,
     val showCreateFoodDialog: Boolean = false,
-    val foodTypeToDelete: FoodType? = null
+    val foodTypeToDelete: FoodType? = null,
+    val selectedTab: MainScreenTab = MainScreenTab.ACTIVITIES
 ) {
     val bmr: Int
         get() = user.calculateBmr()

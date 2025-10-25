@@ -9,7 +9,7 @@ import java.util.Date
 @Dao
 interface FoodDao {
 
-    @Query("SELECT * FROM food_records WHERE date = :date")
+    @Query("SELECT * FROM food_records WHERE date = :date ORDER BY id DESC")
     fun getFoodForDate(date: Date): Flow<List<FoodRecord>>
 
     @Query("SELECT * FROM food_records WHERE date BETWEEN :startDate AND :endDate")
