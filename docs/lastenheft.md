@@ -76,7 +76,7 @@ Optional kann die App später um Login, Wearables oder KI-Funktionen erweitert w
 
 - Entwicklung im Rahmen des Moduls *Softwaretechnik*  
 - Teamgröße: 5 Personen  
-- Technologie: Flutter (Frontend + lokale DB)  
+- Technologie: (Frontend + lokale DB)  
 - Keine Server- oder Cloud-Infrastruktur  
 - Fokus: Kernfunktionen, einfache Architektur
 
