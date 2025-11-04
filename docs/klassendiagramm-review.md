@@ -61,6 +61,8 @@ c) Datenqualität/Robustheit
     Eingaben validieren (keine negativen Mengen, Plausibilitätscheck > 8 000 kcal/Tag warnen).
     Nebennutzen: Das Modell wird erweiterbar (neue Lebensmittel/Aktivitäten ohne Codeänderung), rechenrichtig (MET-basiert) und persistenzfreundlich (Reports ohne harte Kopplung).
 
-**Design-Entscheidungen**   
-
+**Verbessrungsvorschläge von uns diskutiert**
+Der Verbesserungsvorschlag, dass man anstatt die Enums Katalog-Entities verwendet ist sehr gut, weil ja jede Entity ihre eigenen Attribute hat, die man nicht mit Enums darstellen kann.
+Die Idee dass die Records abgeleitet (derived) sind ist vollkommen verständlich und wird von uns umgesetzt, da ja die Werte dafür immer neu berechnet werden. Das mit dem Domain-Service haben wir noch nicht völlig verstanden, das müssen wir noch etwas mehr recherchieren um dann eine sinnvolle Meinung zu haben. 
+Auch der Vorschlag zu Datenqualität/Robustheit finden wir gut und werden Itensität und Portionsgröße durch Enums ersetzen.
   
