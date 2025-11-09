@@ -19,3 +19,27 @@ und eine Bestätigung angezeigt. Gleichzeitig wird die Kalorienbilanz des Tages 
 - Bei unvollständigen oder ungültigen Eingaben zeigt die App eine Fehlermeldung an („Bitte alle Felder ausfüllen“).
 - Der Nutzer wird zurück zur Eingabemaske geleitet; keine Speicherung findet statt.
 - Nur gültige Eingaben führen zur Speicherung und zur Aktualisierung der Tagesbilanz.
+
+## Sequenzdiagramm 1: UC-01 – Aktivität erfassen
+
+**Welche Interaktion wird gezeigt?**  
+Nutzer erfasst eine Aktivität (Typ, Dauer, Intensität, Datum). Das System berechnet den Kalorienverbrauch und speichert den ActivityRecord.
+
+**Welche Klassen sind beteiligt?**  
+User (Actor), ActivityController, ActivityService, CaloriesCalculator, ActivityRepository (SQLite)
+
+**Was ist die zentrale Nachricht/Funktionalität?**  
+`estimateCalories(user, type, duration, intensity)` → der CaloriesCalculator liefert `kcal` zurück; anschließend `save(ActivityRecord{..., kcal})`.
+
+---
+
+## Sequenzdiagramm 2: UC-02 – Ernährung erfassen
+
+**Welche Interaktion wird gezeigt?**  
+Nutzer fügt einen Ernährungseintrag hinzu (Food, Portion, kcal/Einheit). Das System berechnet die Gesamt-kcal und aktualisiert die Tagesbilanz.
+
+**Welche Klassen sind beteiligt?**  
+User (Actor), NutritionController, NutritionService, FoodRepository (SQLite), ReportRepository (SQLite)
+
+**Was ist die zentrale Nachricht/Funktionalität?**  
+`updateDailyIn(userId, date, kcal = portionSize * caloriesPerUnit)` → Tageskalorien **Eingenommen** werden erhöht; vorher `save(FoodRecord{...})`.
