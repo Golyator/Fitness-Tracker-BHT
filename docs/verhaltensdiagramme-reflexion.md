@@ -17,7 +17,7 @@ aktivitaetsdiagramm-[aktivitaet-erfassen].png
 2. Was zeigen Ihre Diagramme? (3-4 Sätze). Was ist der wichtigste Ablauf in Ihrem System? Welche
    Objektinteraktionen sind zentral? Welche Erkenntnisse haben Sie beim Modellieren gewonnen?
 
-**DAS MÜSSTEN WIR ZUSAMMEN MACHEN**
+siehe aktivitaetsdiagramme-beschreibung.md
 
 3. Unterschied statisch vs. dynamisch (3-4 Sätze). Was zeigt das Klassendiagramm (Woche 5)? Was zeigen die
    Verhaltensdiagramme (diese Woche)? Warum braucht man beides?
