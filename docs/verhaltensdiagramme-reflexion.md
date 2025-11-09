@@ -4,11 +4,16 @@ Klassendiagramme:
   klassendiagramm-v1.0.png
     -> Hier findet man die Klassen: User, Report, ActivityRecord und FoodRecord
 
+Sequenzdiagramme:
+  Sequenzdiagramm_UC_01.png
+  Sequenzdiagramm_UC_02.png
+  Sequenzdiagramm_UC_03.png
+    -> Hier findet man die Klassen/Objekten: User, Report, ActivityRecord und FoodRecord
+
 Zustandsdiagramme:
   zustandsdigaramm-kalorienverbrauch.png
     -> Hier wird der Zustand dargestellt, was passiert wenn man in der App den Kalorienverbauch anzeigen lassen möchte
 
-**BIITE DIE RESTLICHEN DIAGRAMME ERGÄNZEN SOBALD VORHANDEN!**
 
 2. Was zeigen Ihre Diagramme? (3-4 Sätze). Was ist der wichtigste Ablauf in Ihrem System? Welche 
 Objektinteraktionen sind zentral? Welche Erkenntnisse haben Sie beim Modellieren gewonnen? 
