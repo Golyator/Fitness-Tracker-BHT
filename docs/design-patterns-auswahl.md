@@ -100,7 +100,7 @@ Wenn man alles in einer großen `if/else`- oder `switch`-Struktur in     `Activi
 
 ### Klassendiagramm (Mermaid)
 
-````markdown
+
 ```mermaid
 classDiagram
     class CaloriesCalculator {
