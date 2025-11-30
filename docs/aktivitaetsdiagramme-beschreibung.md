@@ -43,3 +43,18 @@ User (Actor), NutritionController, NutritionService, FoodRepository (SQLite), Re
 
 **Was ist die zentrale Nachricht/Funktionalität?**  
 `updateDailyIn(userId, date, kcal = portionSize * caloriesPerUnit)` → Tageskalorien **Eingenommen** werden erhöht; vorher `save(FoodRecord{...})`.
+
+---
+
+## Sequenzdiagramm 3: UC-04 – Kalorienauswertung anzeigen
+
+**Welche Interaktion wird gezeigt?**  
+Der Nutzer möchte eine Kalorienauswertung für einen bestimmten Zeitraum sehen (z. B. Woche oder Monat).  
+Das System lädt alle relevanten Food- und ActivityRecords, berechnet die Summen für **kcal aufgenommen** und **kcal verbrannt** und liefert diese an die Oberfläche zurück, damit Diagramm und Zusammenfassung dargestellt werden können.
+
+**Welche Klassen sind beteiligt?**  
+User (Actor), ReportController, ReportService, ReportRepository (SQLite), Report (Value Object)
+
+**Was ist die zentrale Nachricht/Funktionalität?**  
+`getReport(userId, dateRange)` →  
+Der ReportService lädt über das Repository alle Food- und ActivityRecords des Nutzers im gewählten Zeitraum, aggregiert *kcal_in* und *kcal_out* und erzeugt ein `Report{ totals, dateRange }` Objekt, das anschließend im UI visualisiert wird (Diagramm + Summary).
