@@ -1,6 +1,5 @@
 package controller;
 
-import database.DatabaseManager;
 import model.BmrCalculator;
 import model.UserProfile;
 import view.BmrView;
@@ -8,44 +7,41 @@ import view.BmrView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class BmrController {
+public class BmrController implements ActionListener {
 
     private BmrView view;
 
     public BmrController(BmrView view) {
         this.view = view;
-        this.view.addSaveListener(new SaveButtonListener());
+        // Korrektur: Statt einer nicht existierenden addSaveListener Methode
+        // holen wir uns den Button und fügen diesen Controller als Listener hinzu.
+        this.view.getCalculateButton().addActionListener(this);
     }
 
-    class SaveButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            try {
-                // 1. Daten holen
-                int age = Integer.parseInt(view.getAgeInput());
-                double weight = Double.parseDouble(view.getWeightInput());
-                double height = Double.parseDouble(view.getHeightInput());
-                String gender = view.getGenderInput();
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            double weight = Double.parseDouble(view.getWeightInput());
+            // Korrektur: height muss ein int sein, da UserProfile int erwartet.
+            // Wir parsen es direkt als int.
+            int height = Integer.parseInt(view.getHeightInput());
+            int age = Integer.parseInt(view.getAgeInput());
+            String gender = view.getGenderInput();
 
-                // 2. Model erstellen
-                UserProfile user = new UserProfile(age, weight, height, gender);
+            UserProfile user = new UserProfile(weight, height, age, gender);
 
-                // 3. Logik (BMR)
-                double bmr = BmrCalculator.calculate(user);
-                user.setBmr(bmr);
+            // Korrektur: Die Methode im Calculator heißt 'calculate', nicht 'calculateBMR'
+            double bmr = BmrCalculator.calculate(user);
 
-                // 4. Speichern (Delegation an DatabaseManager)
-                DatabaseManager.saveUser(user);
+            // Setze BMR im UserProfile (wichtig für DatabaseManager später)
+            user.setBmr(bmr);
 
-                // 5. View Update
-                view.setResultText(String.format("%.2f kcal", bmr));
+            view.setBmrResult("Ergebnis: " + String.format("%.2f", bmr) + " kcal/Tag");
 
-            } catch (NumberFormatException ex) {
-                view.showErrorMessage("Bitte gib gültige Zahlen ein!");
-            } catch (Exception ex) {
-                view.showErrorMessage("Speicherfehler: " + ex.getMessage());
-                ex.printStackTrace();
-            }
+        } catch (NumberFormatException ex) {
+            view.showErrorMessage("Bitte geben Sie gültige Zahlen ein! (Größe und Alter müssen ganzzahlig sein)");
+        } catch (IllegalArgumentException ex) {
+            view.showErrorMessage(ex.getMessage());
         }
     }
 }

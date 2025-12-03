@@ -6,64 +6,89 @@ import java.awt.event.ActionListener;
 
 public class BmrView extends JFrame {
 
-    private JTextField ageField = new JTextField(5);
-    private JTextField weightField = new JTextField(5);
-    private JTextField heightField = new JTextField(5);
-    private JComboBox<String> genderBox = new JComboBox<>(new String[]{"Männlich", "Weiblich"});
-    private JButton saveButton = new JButton("BMR Berechnen & Speichern");
-    private JLabel resultLabel = new JLabel("Ergebnis: ---");
+    private JTextField ageField;
+    private JTextField weightField;
+    private JTextField heightField;
+    // Änderung: Statt Textfeld nutzen wir RadioButtons
+    private JRadioButton maleButton;
+    private JRadioButton femaleButton;
+    private ButtonGroup genderGroup;
+
+    private JButton calculateButton;
+    private JLabel resultLabel;
 
     public BmrView() {
-        setTitle("Fitness App - BMR Rechner");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("BMR Rechner");
         setSize(400, 300);
-        setLayout(new GridLayout(6, 2, 10, 10)); // Grid Layout für Ordnung
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(6, 2));
 
-        // Zeile 1
-        add(new JLabel("Alter (Jahre):"));
-        add(ageField);
-
-        // Zeile 2
         add(new JLabel("Gewicht (kg):"));
+        weightField = new JTextField();
         add(weightField);
 
-        // Zeile 3
         add(new JLabel("Größe (cm):"));
+        heightField = new JTextField();
         add(heightField);
 
-        // Zeile 4
+        add(new JLabel("Alter (Jahre):"));
+        ageField = new JTextField();
+        add(ageField);
+
         add(new JLabel("Geschlecht:"));
-        add(genderBox);
+        // Panel für Radio Buttons erstellen, damit sie in einer Zelle sind
+        JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        maleButton = new JRadioButton("Männlich");
+        femaleButton = new JRadioButton("Weiblich");
+        maleButton.setSelected(true); // Standardauswahl
 
-        // Zeile 5
-        add(new JLabel("")); // Leerer Platzhalter
-        add(saveButton);
+        genderGroup = new ButtonGroup();
+        genderGroup.add(maleButton);
+        genderGroup.add(femaleButton);
 
-        // Zeile 6
-        add(new JLabel("Dein Grundumsatz:"));
+        genderPanel.add(maleButton);
+        genderPanel.add(femaleButton);
+        add(genderPanel);
+
+        calculateButton = new JButton("Berechnen");
+        add(calculateButton);
+
+        resultLabel = new JLabel("Ergebnis: ");
         add(resultLabel);
-
-        // Fenster zentrieren und sichtbar machen
-        setLocationRelativeTo(null);
     }
 
-    // Getter für die Eingabewerte (damit der Controller sie lesen kann)
-    public String getAgeInput() { return ageField.getText(); }
-    public String getWeightInput() { return weightField.getText(); }
-    public String getHeightInput() { return heightField.getText(); }
-    public String getGenderInput() { return (String) genderBox.getSelectedItem(); }
-
-    // Setter für das Ergebnis
-    public void setResultText(String text) {
-        resultLabel.setText(text);
+    public JButton getCalculateButton() {
+        return calculateButton;
     }
 
-    // Methode, um dem Button einen Listener (den Controller) hinzuzufügen
-    public void addSaveListener(ActionListener listener) {
-        saveButton.addActionListener(listener);
+    // Neue Getter-Methoden für die Eingabewerte
+    public String getWeightInput() {
+        return weightField.getText();
     }
-    
+
+    public String getHeightInput() {
+        return heightField.getText();
+    }
+
+    public String getAgeInput() {
+        return ageField.getText();
+    }
+
+    public String getGenderInput() {
+        if (maleButton.isSelected()) {
+            return "Männlich";
+        } else if (femaleButton.isSelected()) {
+            return "Weiblich";
+        }
+        return "Unbekannt";
+    }
+
+     public void setBmrResult(String result) {
+        resultLabel.setText(result);
+    }
+
+    // Neue Methode für Fehlermeldungen
     public void showErrorMessage(String message) {
-        JOptionPane.showMessageDialog(this, message, "Fehler", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Eingabefehler", JOptionPane.ERROR_MESSAGE);
     }
 }
