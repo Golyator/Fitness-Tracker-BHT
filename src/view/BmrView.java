@@ -2,18 +2,15 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 public class BmrView extends JFrame {
 
     private JTextField ageField;
     private JTextField weightField;
     private JTextField heightField;
-    // Änderung: Statt Textfeld nutzen wir RadioButtons
     private JRadioButton maleButton;
     private JRadioButton femaleButton;
     private ButtonGroup genderGroup;
-
     private JButton calculateButton;
     private JLabel resultLabel;
 
@@ -36,11 +33,10 @@ public class BmrView extends JFrame {
         add(ageField);
 
         add(new JLabel("Geschlecht:"));
-        // Panel für Radio Buttons erstellen, damit sie in einer Zelle sind
         JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         maleButton = new JRadioButton("Männlich");
         femaleButton = new JRadioButton("Weiblich");
-        maleButton.setSelected(true); // Standardauswahl
+        maleButton.setSelected(true);
 
         genderGroup = new ButtonGroup();
         genderGroup.add(maleButton);
@@ -61,33 +57,20 @@ public class BmrView extends JFrame {
         return calculateButton;
     }
 
-    // Neue Getter-Methoden für die Eingabewerte
-    public String getWeightInput() {
-        return weightField.getText();
-    }
-
-    public String getHeightInput() {
-        return heightField.getText();
-    }
-
-    public String getAgeInput() {
-        return ageField.getText();
-    }
+    public String getWeightInput() { return weightField.getText(); }
+    public String getHeightInput() { return heightField.getText(); }
+    public String getAgeInput() { return ageField.getText(); }
 
     public String getGenderInput() {
-        if (maleButton.isSelected()) {
-            return "Männlich";
-        } else if (femaleButton.isSelected()) {
-            return "Weiblich";
-        }
+        if (maleButton.isSelected()) return "Männlich";
+        else if (femaleButton.isSelected()) return "Weiblich";
         return "Unbekannt";
     }
 
-     public void setBmrResult(String result) {
+    public void setBmrResult(String result) {
         resultLabel.setText(result);
     }
 
-    // Neue Methode für Fehlermeldungen
     public void showErrorMessage(String message) {
         JOptionPane.showMessageDialog(this, message, "Eingabefehler", JOptionPane.ERROR_MESSAGE);
     }

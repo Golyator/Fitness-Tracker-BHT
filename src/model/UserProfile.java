@@ -23,19 +23,8 @@ public class UserProfile {
         return bmr;
     }
 
-    public double getWeight() {
-        return weight;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public String getGender() {
-        return gender;
-    }
+    public double getWeight() { return weight; }
+    public int getHeight() { return height; }
+    public int getAge() { return age; }
+    public String getGender() { return gender; }
 }

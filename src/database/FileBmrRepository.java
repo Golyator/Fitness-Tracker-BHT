@@ -6,41 +6,39 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class DatabaseManager {
+public class FileBmrRepository implements BmrRepository {
 
     private static final String FILE_NAME = "fitness_data.csv";
 
-    // Erstellt die Datei, falls sie nicht existiert
-    public static void initialize() {
+    public FileBmrRepository() {
+        initialize();
+    }
+
+    private void initialize() {
         File file = new File(FILE_NAME);
         if (!file.exists()) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-                // Kopfzeile schreiben
                 writer.write("Alter,Gewicht,Größe,Geschlecht,BMR");
                 writer.newLine();
-                System.out.println("Datenbank-Datei erstellt: " + file.getAbsolutePath());
             } catch (IOException e) {
-                System.err.println("Fehler beim Erstellen der Datenbank-Datei: " + e.getMessage());
+                System.err.println("Fehler beim Erstellen der Datei: " + e.getMessage());
             }
         }
     }
 
-    // Speichert einen Nutzer in der Datei
-    public static void saveUser(UserProfile user) {
+    @Override
+    public void save(UserProfile user) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
-            // Daten als kommagetrennte Zeile formatieren
-            String line = String.format("%d,%.2f,%.2f,%s,%.2f",
+            String line = String.format("%d,%.2f,%d,%s,%.2f",
                     user.getAge(),
                     user.getWeight(),
-                    user.getHeight(),
+                    user.getHeight(), // ist int -> %d
                     user.getGender(),
                     user.getBmr());
 
             writer.write(line);
             writer.newLine();
-            System.out.println("Daten gespeichert in: " + FILE_NAME);
         } catch (IOException e) {
-            System.err.println("Fehler beim Speichern: " + e.getMessage());
             throw new RuntimeException("Speichern fehlgeschlagen", e);
         }
     }
