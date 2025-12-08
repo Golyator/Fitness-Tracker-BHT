@@ -1,0 +1,7 @@
+Main.class
+database\BmrRepository.class
+controller\BmrController.class
+view\BmrView.class
+model\BmrCalculator.class
+model\UserProfile.class
+database\FileBmrRepository.class
