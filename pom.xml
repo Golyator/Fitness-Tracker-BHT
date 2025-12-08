@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -18,14 +17,24 @@
     </properties>
 
     <dependencies>
-        <!-- ... andere Dependencies ... -->
-
         <!-- JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- JavaFX: Controls + FXML -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>21.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>21.0.4</version>
         </dependency>
     </dependencies>
 
@@ -41,27 +50,25 @@
                 </configuration>
             </plugin>
 
-            <!-- Compiler-Plugin für Java 23 (optional, aber sinnvoll) -->
+            <!-- Compiler-Plugin für Java 23 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>23</source>
+                    <target>23</target>
+                </configuration>
+            </plugin>
+            <!-- JavaFX Maven Plugin -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>MainFx</mainClass>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 </project>
-
-<!--
-Die pom.xml ist so etwas wie der Steuerzettel für dein Maven‑Projekt.
-Darin steht u.a.:
-- wie dein Projekt heißt,
-- welche Java‑Version verwendet wird,
-- welche Bibliotheken (Dependencies) eingebunden werden sollen,
-- wie gebaut, getestet und gepackt wird (Plugins, Build‑Konfiguration).
-Maven liest diese Datei und erledigt damit viele Dinge automatisch: Dependencies herunterladen, Kompilieren,
-Tests ausführen, JAR bauen, usw.
--->
