@@ -1,2 +1,4 @@
+model\FoodRecordTest.class
 model\UserProfileTest.class
+model\FoodTypeTest.class
 model\BmrCalculatorTest.class

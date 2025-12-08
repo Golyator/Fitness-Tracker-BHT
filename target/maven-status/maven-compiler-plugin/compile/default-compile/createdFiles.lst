@@ -2,6 +2,8 @@ Main.class
 database\BmrRepository.class
 controller\BmrController.class
 view\BmrView.class
+model\FoodRecord.class
+model\FoodType.class
 model\BmrCalculator.class
 model\UserProfile.class
 database\FileBmrRepository.class

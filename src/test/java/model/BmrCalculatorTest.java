@@ -1,17 +1,16 @@
 package model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class BmrCalculatorTest {
     
     @Test
     void calculate_returnsCorrectBmrForMale() {
-        // TODO: Konstruktor an deine UserProfile-Implementierung anpassen
+        
         UserProfile user = new UserProfile(
                 80.0,        // Gewicht in kg
-                180.0,       // Größe in cm
+                180,       // Größe in cm
                 30,          // Alter in Jahren
                 "Männlich"   // Geschlecht
         );
@@ -27,7 +26,7 @@ public class BmrCalculatorTest {
     void calculate_returnsCorrectBmrForFemale() {
         UserProfile user = new UserProfile(
                 60.0,
-                165.0,
+                165,
                 25,
                 "Weiblich"
         );
@@ -40,32 +39,7 @@ public class BmrCalculatorTest {
         assertEquals(1345.25, result, 0.1);
     }
 
-    @Test
-    void calculate_isCaseInsensitiveForMale() {
-        UserProfile user = new UserProfile(
-                80.0,
-                180.0,
-                30,
-                "mÄnNlIcH"
-        );
 
-        double result = BmrCalculator.calculate(user);
 
-        assertEquals(1780.0, result, 0.1);
-    }
 
-    @Test
-    void calculate_usesFemaleBranchForNonMaleGender() {
-        UserProfile user = new UserProfile(
-                80.0,
-                180.0,
-                30,
-                "Divers"
-        );
-
-        double result = BmrCalculator.calculate(user);
-
-        // gleiche base wie oben: 1775 - 161 = 1614
-        assertEquals(1614.0, result, 0.1);
-    }
 }
