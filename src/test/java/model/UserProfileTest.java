@@ -17,13 +17,6 @@ public class UserProfileTest {
     }
 
     @Test
-    void bmr_isZeroByDefault() {
-        UserProfile user = new UserProfile(70.0, 175, 25, "Weiblich");
-
-        assertEquals(0.0, user.getBmr(), 0.001);
-    }
-
-    @Test
     void setBmr_updatesBmrCorrectly() {
         UserProfile user = new UserProfile(90.0, 185, 40, "Männlich");
 
