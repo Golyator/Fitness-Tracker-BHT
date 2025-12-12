@@ -14,6 +14,11 @@
         <maven.compiler.target>23</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>5.10.0</junit.jupiter.version>
+
+        <!-- JavaFX Version + Plattform -->
+        <javafx.version>21.0.4</javafx.version>
+        <!-- HIER deine Plattform eintragen: win, linux oder mac -->
+        <javafx.platform>win</javafx.platform>
     </properties>
 
     <dependencies>
@@ -25,16 +30,18 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JavaFX: Controls + FXML -->
+        <!-- JavaFX: Controls + FXML (mit classifier!) -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>21.0.4</version>
+            <version>${javafx.version}</version>
+            <classifier>${javafx.platform}</classifier>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>21.0.4</version>
+            <version>${javafx.version}</version>
+            <classifier>${javafx.platform}</classifier>
         </dependency>
     </dependencies>
 
@@ -60,6 +67,7 @@
                     <target>23</target>
                 </configuration>
             </plugin>
+
             <!-- JavaFX Maven Plugin -->
             <plugin>
                 <groupId>org.openjfx</groupId>
@@ -68,6 +76,27 @@
                 <configuration>
                     <mainClass>MainFx</mainClass>
                 </configuration>
+            </plugin>
+
+            <!-- JaCoCo Code Coverage -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.11</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
