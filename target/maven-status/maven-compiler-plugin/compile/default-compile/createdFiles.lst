@@ -1,6 +1,4 @@
-Main.class
 database\BmrRepository.class
-controller\BmrController.class
 MainFx.class
 view\BmrView.class
 controller\BmrControllerFx.class
