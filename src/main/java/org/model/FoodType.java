@@ -1,4 +1,4 @@
-package model;
+package org.model;
 
 public class FoodType {
     private int id;

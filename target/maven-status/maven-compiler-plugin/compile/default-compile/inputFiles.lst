@@ -1,9 +1,9 @@
-J:\BHT\Softwaretechnik\Fitness-Tracker-BHT\src\main\java\controller\BmrController.java
-J:\BHT\Softwaretechnik\Fitness-Tracker-BHT\src\main\java\database\BmrRepository.java
-J:\BHT\Softwaretechnik\Fitness-Tracker-BHT\src\main\java\database\FileBmrRepository.java
-J:\BHT\Softwaretechnik\Fitness-Tracker-BHT\src\main\java\Main.java
-J:\BHT\Softwaretechnik\Fitness-Tracker-BHT\src\main\java\model\BmrCalculator.java
-J:\BHT\Softwaretechnik\Fitness-Tracker-BHT\src\main\java\model\FoodRecord.java
-J:\BHT\Softwaretechnik\Fitness-Tracker-BHT\src\main\java\model\FoodType.java
-J:\BHT\Softwaretechnik\Fitness-Tracker-BHT\src\main\java\model\UserProfile.java
-J:\BHT\Softwaretechnik\Fitness-Tracker-BHT\src\main\java\view\BmrView.java
+/home/oksana/Documents/BHT Study/Softwaretechnik/Projects/Team-1-Gruppenarbeit-Softwaretechnik/src/main/java/org/Main.java
+/home/oksana/Documents/BHT Study/Softwaretechnik/Projects/Team-1-Gruppenarbeit-Softwaretechnik/src/main/java/org/controller/BmrController.java
+/home/oksana/Documents/BHT Study/Softwaretechnik/Projects/Team-1-Gruppenarbeit-Softwaretechnik/src/main/java/org/database/BmrRepository.java
+/home/oksana/Documents/BHT Study/Softwaretechnik/Projects/Team-1-Gruppenarbeit-Softwaretechnik/src/main/java/org/database/FileBmrRepository.java
+/home/oksana/Documents/BHT Study/Softwaretechnik/Projects/Team-1-Gruppenarbeit-Softwaretechnik/src/main/java/org/model/BmrCalculator.java
+/home/oksana/Documents/BHT Study/Softwaretechnik/Projects/Team-1-Gruppenarbeit-Softwaretechnik/src/main/java/org/model/FoodRecord.java
+/home/oksana/Documents/BHT Study/Softwaretechnik/Projects/Team-1-Gruppenarbeit-Softwaretechnik/src/main/java/org/model/FoodType.java
+/home/oksana/Documents/BHT Study/Softwaretechnik/Projects/Team-1-Gruppenarbeit-Softwaretechnik/src/main/java/org/model/UserProfile.java
+/home/oksana/Documents/BHT Study/Softwaretechnik/Projects/Team-1-Gruppenarbeit-Softwaretechnik/src/main/java/org/view/BmrView.java

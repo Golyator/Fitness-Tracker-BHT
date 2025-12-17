@@ -2,6 +2,8 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
+import org.model.BmrCalculator;
+import org.model.UserProfile;
 
 public class BmrCalculatorTest {
     

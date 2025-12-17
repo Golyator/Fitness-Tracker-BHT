@@ -1,14 +1,15 @@
-import controller.BmrController;
-import database.BmrRepository;
-import database.FileBmrRepository;
-import view.BmrView;
+package org;
+
+import org.database.FileBmrRepository;
+import org.controller.BmrController;
+import org.view.BmrView;
 
 import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
         // 1. Repository erstellen (kümmert sich selbst um Init)
-        BmrRepository repository = new FileBmrRepository();
+        FileBmrRepository repository = new FileBmrRepository();
 
         // Swing Start
         SwingUtilities.invokeLater(() -> {

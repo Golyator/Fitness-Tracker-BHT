@@ -1,6 +1,6 @@
-package database;
+package org.database;
 
-import model.UserProfile;
+import org.model.UserProfile;
 
 public interface BmrRepository {
     void save(UserProfile user);

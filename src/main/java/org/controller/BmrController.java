@@ -1,12 +1,12 @@
-package controller;
+package org.controller;
 
 import java.awt.event.ActionEvent; // Interface nutzen!
 import java.awt.event.ActionListener;
 
-import database.BmrRepository;
-import model.BmrCalculator;
-import model.UserProfile;
-import view.BmrView;
+import org.database.BmrRepository;
+import org.model.BmrCalculator;
+import org.model.UserProfile;
+import org.view.BmrView;
 
 public class BmrController implements ActionListener {
 

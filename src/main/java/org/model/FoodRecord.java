@@ -1,4 +1,4 @@
-package model;
+package org.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

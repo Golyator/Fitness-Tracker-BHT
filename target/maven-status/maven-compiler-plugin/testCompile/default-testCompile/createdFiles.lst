@@ -1,4 +1,2 @@
-model\FoodRecordTest.class
-model\UserProfileTest.class
-model\FoodTypeTest.class
-model\BmrCalculatorTest.class
+integration_tests/BmrControllerIT$FakeView.class
+integration_tests/BmrControllerIT.class
