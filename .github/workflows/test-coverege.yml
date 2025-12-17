@@ -1,0 +1,68 @@
+
+name: Maven Tests & Coverage %
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+jobs:
+  test-and-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Build & run tests (unit + integration + coverage)
+        run: mvn -B clean verify
+
+      - name: Compute coverage % from JaCoCo XML (LINE)
+        id: coverage
+        run: |
+          # Pick the XML file. For multi-module aggregate, use:
+          # REPORT="target/site/jacoco-aggregate/jacoco.xml"
+          REPORT="target/site/jacoco/jacoco.xml"
+
+          if [ ! -f "$REPORT" ]; then
+            echo "JaCoCo XML not found at $REPORT"
+            exit 1
+          fi
+
+          # Extract covered and missed LINE counters from jacoco.xml.
+          # This awk sums all LINE counters across packages/bundles.
+          read COVERED MISSED <<<$(awk -F'"' '
+            /<counter type="LINE"/ {
+              for(i=1;i<=NF;i++){
+                if($i ~ /covered=/){c=$(i+1)}
+                if($i ~ /missed=/){m=$(i+1)}
+              }
+              totalCovered+=c
+              totalMissed+=m
+            }
+            END { printf("%.0f %.0f", totalCovered, totalMissed) }
+          ' "$REPORT")
+
+          TOTAL=$((COVERED + MISSED))
+          if [ "$TOTAL" -eq 0 ]; then
+            PCT=0
+          else
+            # scale to 2 decimals
+            PCT=$(awk -v c="$COVERED" -v t="$TOTAL" 'BEGIN{ printf "%.2f", (c*100.0)/t }')
+          fi
+
+          echo "Line coverage: ${PCT}% (${COVERED}/${TOTAL})"
+          echo "percent=$PCT" >> $GITHUB_OUTPUT
+
+      - name: Print in Job Summary
+        run: |
+          echo "### Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "- Line coverage: **${          echo "- Line coverage: **${{ steps.coverage.outputs.percent }}%**" >> $GITHUB_STEP_SUMMARY
