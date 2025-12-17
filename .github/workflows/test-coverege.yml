@@ -24,44 +24,13 @@ jobs:
 
       - name: Build & run tests (unit + integration + coverage)
         run: mvn -B clean verify
+        
+      - name: Upload reports (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-reports
+          path: |
+            **/target/site/jacoco/*
+            **/target/surefire-reports/*
 
-      - name: Compute coverage % from JaCoCo XML
-        id: coverage
-        shell: bash
-        run: |
-          set -euo pipefail
-          
-          REPORT="target/site/jacoco/jacoco.xml"  # or target/site/jacoco-aggregate/jacoco.xml for multi-module
-          if [[ ! -f "$REPORT" ]]; then
-            echo "JaCoCo XML not found at $REPORT" >&2
-            exit 1
-          fi
-          
-          # Sum all LINE counters from jacoco.xml
-          read -r COVERED MISSED <<<"$(awk -F'"' '
-            /<counter type="LINE"/ {
-              for(i=1;i<=NF;i++){
-                if($i ~ /covered=/){c=$(i+1)}
-                if($i ~ /missed=/){m=$(i+1)}
-              }
-              totalCovered+=c
-              totalMissed+=m
-            }
-            END { printf("%.0f %.0f", totalCovered, totalMissed) }
-          ' "$REPORT")"
-          
-          TOTAL=$((COVERED + MISSED))
-          if [[ "$TOTAL" -eq 0 ]]; then
-            PCT="0.00"
-          else
-            PCT="$(awk -v c="$COVERED" -v t="$TOTAL" 'BEGIN{ printf "%.2f", (c*100.0)/t }')"
-          fi
-          
-          echo "Line coverage: ${PCT}% (${COVERED}/${TOTAL})"
-          # expose as step output
-          echo "percent=${PCT}" >> "$GITHUB_OUTPUT"
-
-      - name: Add coverage to Job Summary
-        shell: bash
-        run: |
-          echo "###    echo "### Coverage" >> "$GITHUB_STEP_SUMMARY"
