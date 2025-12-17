@@ -1,8 +1,6 @@
-package org;
-
-import org.database.FileBmrRepository;
-import org.controller.BmrController;
-import org.view.BmrView;
+import database.FileBmrRepository;
+import controller.BmrController;
+import view.BmrView;
 
 import javax.swing.*;
 

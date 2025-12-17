@@ -1,11 +1,11 @@
 package integration_tests;
 
-import org.controller.BmrController;
-import org.database.BmrRepository;
+import controller.BmrController;
+import database.BmrRepository;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
-import org.model.UserProfile;
-import org.view.BmrView;
+import model.UserProfile;
+import view.BmrView;
 
 import javax.swing.JButton;
 

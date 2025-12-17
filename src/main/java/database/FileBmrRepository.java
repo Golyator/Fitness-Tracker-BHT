@@ -1,12 +1,12 @@
-package org.database;
+package database;
 
-import org.model.UserProfile;
+import model.UserProfile;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class FileBmrRepository implements org.database.BmrRepository {
+public class FileBmrRepository implements BmrRepository {
 
     private static final String FILE_NAME = "fitness_data.csv";
 
