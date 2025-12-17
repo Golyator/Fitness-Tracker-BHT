@@ -1,34 +1,53 @@
+import controller.ActivityControllerFx;
 import controller.BmrControllerFx;
+import controller.FoodControllerFx;
+import database.ActivityRepository;
 import database.BmrRepository;
+import database.FileActivityRepository;
 import database.FileBmrRepository;
+import database.FileFoodRepository;
+import database.FoodRepository;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import view.ActivityViewFx;
 import view.BmrViewFx;
+import view.DailySummaryViewFx;
+import view.FoodViewFx;
 
 public class MainFx extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // 1. Repository wie bisher anlegen
-        BmrRepository repository = new FileBmrRepository();
+        // Repositories
+        BmrRepository bmrRepository = new FileBmrRepository();
+        FoodRepository foodRepository = new FileFoodRepository();
+        ActivityRepository activityRepository = new FileActivityRepository();
 
-        // 2. JavaFX-View erzeugen
-        BmrViewFx view = new BmrViewFx();
+        // Views
+        BmrViewFx bmrView = new BmrViewFx();
+        ActivityViewFx activityView = new ActivityViewFx();
+        FoodViewFx foodView = new FoodViewFx();
+        DailySummaryViewFx summaryView = new DailySummaryViewFx();
 
-        // 3. Controller anbinden
-        new BmrControllerFx(view, repository);
+        // Reihenfolge: BMR (oben), Activity, Food, Tagesbilanz (unten)
+        bmrView.addBelow(activityView.getRoot());
+        bmrView.addBelow(foodView.getRoot());
+        bmrView.addBelow(summaryView.getRoot());
 
-        // 4. Scene und Stage konfigurieren
-        Scene scene = new Scene(view.getRoot(), 400, 300);
+        // Controller VERKNÜPFEN – mit SummaryView
+        new BmrControllerFx(bmrView, bmrRepository, summaryView);
+        new FoodControllerFx(foodView, foodRepository, summaryView);
+        new ActivityControllerFx(activityView, activityRepository, summaryView);
+
+        Scene scene = new Scene(bmrView.getRoot(), 450, 650);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("BMR Rechner (JavaFX)");
+        primaryStage.setTitle("Fitness-Tracker-BHT");
 
-        // Fenster darf frei verändert werden, Layout passt sich automatisch an
         primaryStage.show();
     }
 
     public static void main(String[] args) {
-        launch(args);  // Startet die JavaFX Application
+        launch(args);
     }
 }

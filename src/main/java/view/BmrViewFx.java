@@ -3,12 +3,7 @@ package view;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -28,6 +23,8 @@ public class BmrViewFx {
     private final Label resultLabel;
 
     private final Parent root;
+    // Container, in den wir Elemente UNTERHALB der BMR-Card einhängen können
+    private final VBox contentBox;
 
     public BmrViewFx() {
         // Überschrift
@@ -123,25 +120,42 @@ public class BmrViewFx {
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 15, 0.2, 0, 4);"
         );
 
+        // Container, in dem BMR-Card und weitere Cards (z.B. Food) untereinander liegen
+        contentBox = new VBox(20, card);
+        contentBox.setAlignment(Pos.TOP_CENTER);
+
         // Äußerer Root-Container mit schönem Verlauf
-        VBox outerRoot = new VBox(card);
-        outerRoot.setAlignment(Pos.CENTER);
+        VBox outerRoot = new VBox(contentBox);
+        outerRoot.setAlignment(Pos.TOP_CENTER);
         outerRoot.setPadding(new Insets(30));
         outerRoot.setFillWidth(true);
         // Card soll nicht vertikal mitwachsen, nur der Hintergrund
-        VBox.setVgrow(card, Priority.NEVER);
+        VBox.setVgrow(contentBox, Priority.NEVER);
 
         outerRoot.setStyle(
                 "-fx-background-color: linear-gradient(to bottom right, #1e3c72, #2a5298);" +
                         "-fx-font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;"
         );
 
-        this.root = outerRoot;
+        // ScrollPane um outerRoot
+        ScrollPane scrollPane = new ScrollPane(outerRoot);
+        scrollPane.setFitToWidth(true); // Inhalt füllt die Breite
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // nur vertikales Scrollen
+
+        this.root = scrollPane;
     }
 
     // Root für Scene
     public Parent getRoot() {
         return root;
+    }
+
+    /**
+     * weitere UI-Elemente wie FoodViewFx unterhalb des BMR-Rechners
+     * einzufügen.
+     */
+    public void addBelow(Parent node) {
+        contentBox.getChildren().add(node);
     }
 
     // Zugriffsmethoden

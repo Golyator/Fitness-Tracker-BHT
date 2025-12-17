@@ -4,17 +4,20 @@ import database.BmrRepository;
 import model.BmrCalculator;
 import model.UserProfile;
 import view.BmrViewFx;
+import model.CurrentUserContext;
+import view.DailySummaryViewFx;
 
 public class BmrControllerFx {
 
     private final BmrViewFx view;
     private final BmrRepository repository;
+    private final DailySummaryViewFx summaryView;
 
-    public BmrControllerFx(BmrViewFx view, BmrRepository repository) {
+    public BmrControllerFx(BmrViewFx view, BmrRepository repository, DailySummaryViewFx summaryView) {
         this.view = view;
         this.repository = repository;
+        this.summaryView = summaryView;
 
-        // JavaFX-Event-Handler für den Button
         this.view.getCalculateButton().setOnAction(event -> onCalculate());
     }
 
@@ -31,6 +34,12 @@ public class BmrControllerFx {
 
             // Repository nutzen zum Speichern
             repository.save(user);
+
+            // Aktuellen User im Kontext ablegen, damit Activity darauf zugreifen kann
+            CurrentUserContext.setCurrentUser(user);
+
+            // BMR in die Tagesbilanz eintragen
+            summaryView.setBmr(bmr);
 
             view.setBmrResult("Ergebnis: " + String.format("%.2f", bmr) + " kcal/Tag");
 
