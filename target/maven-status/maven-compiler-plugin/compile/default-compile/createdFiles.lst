@@ -1,0 +1,16 @@
+database\BmrRepository.class
+database\FileActivityRepository.class
+model\CurrentUserContext.class
+view\ActivityViewFx.class
+controller\ActivityControllerFx.class
+database\FileBmrRepository.class
+database\FoodRepository.class
+view\DailySummaryViewFx.class
+database\ActivityRepository.class
+MainFx.class
+controller\BmrControllerFx.class
+database\FileFoodRepository.class
+view\BmrViewFx.class
+model\BmrCalculator.class
+model\UserProfile.class
+model\FoodCalculator.class
