@@ -71,35 +71,6 @@ class ActivityControllerFxIT {
         m.invoke(controller);
     }
 
-    static <T> T newInstance(Class<T> cls) {
-        try {
-            var ctor = cls.getDeclaredConstructor();
-            ctor.setAccessible(true);
-            return ctor.newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot instantiate " + cls.getName(), e);
-        }
-    }
-
-    static void setPrivateField(Object target, String fieldName, Object value) {
-        try {
-            Class<?> c = target.getClass();
-            while (c != null) {
-                try {
-                    var f = c.getDeclaredField(fieldName);
-                    f.setAccessible(true);
-                    f.set(target, value);
-                    return;
-                } catch (NoSuchFieldException ignored) {
-                    c = c.getSuperclass();
-                }
-            }
-            throw new NoSuchFieldException(fieldName);
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot set field '" + fieldName + "'", e);
-        }
-    }
-
     @BeforeAll
     static void startFx() {
         try {
