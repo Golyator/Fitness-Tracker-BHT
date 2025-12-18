@@ -1,9 +1,8 @@
 # IntelliJ
-.idea/
+.idea*
 *.iml
 
-# Maven / Build output
-target/
+target*
 
 # Compiled classes (zur Sicherheit)
 *.class

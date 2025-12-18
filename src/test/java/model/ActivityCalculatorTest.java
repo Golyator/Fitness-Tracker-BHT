@@ -14,7 +14,7 @@ public class ActivityCalculatorTest {
 
         ActivityRecord record = new ActivityRecord(durationMinutes, "medium", new Date(), type);
 
-        double calories = ActivityCalculator.calculate(record, user.getWeight());
+        double calories = ActivityCalculator.calculate(record, user);
         double expected = record.getActivity().getMet() * user.getWeight() * (record.getDurationMinutes() / 60.0);
 
         assertEquals(expected, calories, 0.01);
@@ -29,7 +29,7 @@ public class ActivityCalculatorTest {
 
         ActivityRecord record = new ActivityRecord(45, "medium", date, ActivityType.RUNNING);
 
-        double calories = ActivityCalculator.calculate(record, user.getWeight());
+        double calories = ActivityCalculator.calculate(record, user);
         double expected = record.getActivity().getMet() * user.getWeight() * (record.getDurationMinutes() / 60.0);
         assertEquals(expected, calories, 0.01);
     }
@@ -41,7 +41,7 @@ public class ActivityCalculatorTest {
 
         ActivityRecord record = new ActivityRecord(15, "medium", date, ActivityType.WALKING);
 
-        double calories = ActivityCalculator.calculate(record, user.getWeight());
+        double calories = ActivityCalculator.calculate(record, user);
         double expected = record.getActivity().getMet() * user.getWeight() * (record.getDurationMinutes() / 60.0);
         assertEquals(expected, calories, 0.01);
     }
