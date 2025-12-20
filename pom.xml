@@ -30,6 +30,23 @@
             <scope>test</scope>
         </dependency>
 
+
+        <dependency>
+        <groupId>org.testfx</groupId>
+        <artifactId>openjfx-monocle</artifactId>
+        <version>jdk-12.0.1+2</version>
+        <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+            <version>4.0.16-alpha</version>
+            <scope>test</scope>
+        </dependency>
+
+
         <!-- JavaFX: Controls + FXML (mit classifier!) -->
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -42,6 +59,19 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
             <classifier>${javafx.platform}</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -77,6 +107,36 @@
                     <mainClass>MainFx</mainClass>
                 </configuration>
             </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <useSystemClassLoader>true</useSystemClassLoader>
+                    <!-- Add-opens helps some TestFX/Glass internals on newer JDKs -->
+                    <argLine>
+                        --add-opens java.base/sun.nio.ch=ALL-UNNAMED
+                        --add-opens javafx.graphics/com.sun.glass.ui=ALL-UNNAMED
+                    </argLine>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <release>21</release>
+                    <!-- Optional: fail fast on preview features or lint -->
+                    <!-- <compilerArgs>
+                      <arg>-Xlint:all</arg>
+                    </compilerArgs> -->
+                </configuration>
+            </plugin>
+
+
 
             <!-- JaCoCo Code Coverage -->
             <plugin>
