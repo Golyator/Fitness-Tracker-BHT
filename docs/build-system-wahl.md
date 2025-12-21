@@ -38,6 +38,61 @@ In unserem Projekt übernimmt das Build-System folgende Funktionen:
 - Abhängigkeiten, Tests, Builds und Reports werden automatisiert und reproduzierbar ausgeführt.
 - Das Projekt nutzt Maven bereits aktiv (z. B. `pom.xml`, `target/`, `surefire-reports`, `jacoco.exec`).
 
+## Vergleich der Build-Tools – Begründete Abgrenzung
+
+### Warum **Ant** für unser Projekt ungeeignet ist
+
+Ant bietet eine sehr hohe Flexibilität, ist für unser Fitness-Tracker-Projekt jedoch mit deutlichen Nachteilen verbunden:
+
+- **Kein integriertes Dependency Management**  
+  Externe Bibliotheken wie JUnit, JavaFX, TestFX oder Mockito müssten manuell eingebunden und gepflegt werden.
+- **Keine festen Konventionen**  
+  Es gibt keine standardisierte Projektstruktur, was die Zusammenarbeit im Team erschwert.
+- **Sehr umfangreiche XML-Konfigurationen**  
+  Build-Skripte werden schnell unübersichtlich und wartungsintensiv.
+- **Geringe Unterstützung für moderne Build-Workflows**  
+  Test-, Reporting- und CI-Prozesse müssen weitgehend selbst konfiguriert werden.
+
+**Fazit:**  
+Ant eignet sich eher für Legacy- oder Spezialprojekte, nicht jedoch für ein modernes JavaFX-Projekt mit automatisierten Tests.
+
+---
+
+### Warum **Gradle** keinen Mehrwert bietet
+
+Gradle ist ein modernes Build-Tool, bringt für unser Projekt jedoch keine entscheidenden Vorteile:
+
+- **Steilere Lernkurve**  
+  Die Groovy- bzw. Kotlin-DSL ist für Einsteiger weniger intuitiv als Maven-XML.
+- **Hohe Flexibilität erhöht Fehleranfälligkeit**  
+  Gerade bei kleineren oder akademischen Projekten kann dies zu Inkonsistenzen führen.
+- **Kein funktionaler Vorteil für unser Projekt**  
+  JavaFX, Tests und Reports werden bereits vollständig durch Maven unterstützt.
+- **Projekt nutzt Maven bereits aktiv**  
+  Vorhandene Dateien und Ordner wie `pom.xml`, `target/`, `surefire-reports` und `jacoco.exec` sprechen klar für Maven.
+
+**Fazit:**  
+Gradle ist sinnvoll für sehr große oder hochgradig angepasste Build-Prozesse, bietet hier jedoch keinen zusätzlichen Nutzen.
+
+---
+
+### Warum **Maven** die beste Wahl ist
+
+Maven stellt für unser Projekt die optimale Lösung dar:
+
+- **Etablierter Standard für Java-Projekte**
+- **Klare Projektkonventionen (Convention over Configuration)**
+- **Zentrales Dependency Management über `pom.xml`**
+- **Nahtlose Integration von**
+    - Unit-Tests (JUnit)
+    - Integrationstests
+    - Build- und Coverage-Reports (Surefire, JaCoCo)
+- **CI-geeignet und reproduzierbare Builds**
+- **Bereits vollständig im Projekt integriert**
+
+**Gesamtfazit:**  
+Maven bietet die beste Balance aus Struktur, Automatisierung und Teamtauglichkeit und ist daher das am besten geeignete Build-System für unseren Fitness-Tracker.
+
 ---
 
 ## Standard-Verzeichnisstruktur
