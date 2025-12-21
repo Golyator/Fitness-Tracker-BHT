@@ -102,11 +102,12 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <argLine>-XX:+EnableDynamicAgentLoading -Dfile.encoding=UTF-8</argLine>
-                    <useModulePath>false</useModulePath>
-                    <useSystemClassLoader>true</useSystemClassLoader>
-        </configuration>
-    </plugin>
+                    <argLine>
+                        -XX:+EnableDynamicAgentLoading
+                        -Dfile.encoding=UTF-8
+                    </argLine>
+                </configuration>
+            </plugin>
 
     <!-- JavaFX Maven Plugin -->
             <plugin>
