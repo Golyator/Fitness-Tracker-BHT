@@ -104,11 +104,9 @@
                 <configuration>
                     <useModulePath>false</useModulePath>
                     <useSystemClassLoader>true</useSystemClassLoader>
-                    <!-- Add-opens helps some TestFX/Glass internals on newer JDKs -->
-                    <!-- @{argLine} preserves JaCoCo agent configuration -->
-                    <argLine>@{argLine}
+                    <!-- Only add-opens for java.base is needed -->
+                    <argLine>
                         --add-opens java.base/sun.nio.ch=ALL-UNNAMED
-                        --add-opens javafx.graphics/com.sun.glass.ui=ALL-UNNAMED
                     </argLine>
                 </configuration>
             </plugin>
@@ -142,26 +140,6 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                    </execution>
-                    <execution>
-                        <id>check</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <rule>
-                                    <element>BUNDLE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>LINE</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.50</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

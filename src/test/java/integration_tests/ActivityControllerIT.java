@@ -73,6 +73,10 @@ class ActivityControllerFxIT {
 
     @BeforeAll
     static void startFx() {
+        System.setProperty("testfx.robot", "glass");
+        System.setProperty("testfx.headless", "true");
+        System.setProperty("prism.order", "sw");
+
         try {
             Platform.startup(() -> {
             });
