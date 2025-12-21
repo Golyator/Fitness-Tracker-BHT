@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BmrCalculator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fitness-tracker-bht</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">BmrCalculator.java</span></div><h1>BmrCalculator.java</h1><pre class="source lang-java linenums">package model;
+
+<span class="nc" id="L3">public class BmrCalculator {</span>
+
+    // Berechnung von Basal Metabolic Rate (Grundumsatzbrechnung) nach der Mifflin-St Jeor Formel
+    public static double calculate(UserProfile user) {
+        double bmr;
+        // Formel: (10 x Gewicht) + (6.25 x Größe) - (5 x Alter) + s
+        // s = +5 für Männer, s = -161 für Frauen
+<span class="fc" id="L10">        double baseCalculation = (10 * user.getWeight()) + (6.25 * user.getHeight()) - (5 * user.getAge());</span>
+
+<span class="fc bfc" id="L12" title="All 2 branches covered.">        if (&quot;Männlich&quot;.equalsIgnoreCase(user.getGender())) {</span>
+<span class="fc" id="L13">            bmr = baseCalculation + 5;</span>
+        } else {
+<span class="fc" id="L15">            bmr = baseCalculation - 161;</span>
+        }
+<span class="fc" id="L17">        return bmr;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
