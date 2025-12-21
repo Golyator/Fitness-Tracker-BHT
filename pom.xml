@@ -72,14 +72,14 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.11.0</version>
+            <version>5.5.0</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.11.0</version>
+            <version>5.5.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -102,19 +102,16 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <argLine>-XX:+EnableDynamicAgentLoading -Dfile.encoding=UTF-8</argLine>
                     <useModulePath>false</useModulePath>
                     <useSystemClassLoader>true</useSystemClassLoader>
-                    <!-- Add-opens helps some TestFX/Glass internals on newer JDKs -->
-                    <!-- @{argLine} preserves JaCoCo agent configuration -->
-                    <argLine>@{argLine}
+                    <!-- Only add-opens for java.base is needed -->
+                    <argLine>
                         --add-opens java.base/sun.nio.ch=ALL-UNNAMED
-                        --add-opens javafx.graphics/com.sun.glass.ui=ALL-UNNAMED
                     </argLine>
                 </configuration>
             </plugin>
 
-    <!-- JavaFX Maven Plugin -->
+            <!-- JavaFX Maven Plugin -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -130,7 +127,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.12</version>
+                <version>0.8.11</version>
                 <executions>
                     <execution>
                         <goals>
