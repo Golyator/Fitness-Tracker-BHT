@@ -9,21 +9,20 @@ import model.ActivityType;
 import model.CurrentUserContext;
 import model.UserProfile;
 import view.ActivityViewFx;
-import view.DailySummaryViewFx;
 
 public class ActivityControllerFx {
 
     private final ActivityViewFx view;
     private final ActivityRepository repository;
-    private final DailySummaryViewFx summaryView;
+    private final DailySummaryControllerFx summaryController;
 
     // NEU: Akkumulierte Aktivitätskalorien für den Tag
     private double totalActivityCalories = 0.0;
 
-    public ActivityControllerFx(ActivityViewFx view, ActivityRepository repository, DailySummaryViewFx summaryView) {
+    public ActivityControllerFx(ActivityViewFx view, ActivityRepository repository, DailySummaryControllerFx summaryController) {
         this.view = view;
         this.repository = repository;
-        this.summaryView = summaryView;
+        this.summaryController = summaryController;
 
         this.view.getAddActivityButton().setOnAction(event -> onAddActivity());
     }
@@ -73,7 +72,7 @@ public class ActivityControllerFx {
             view.clearInputs();
 
             // Aktivitätskalorien in Tagesbilanz eintragen
-            summaryView.addActivityCalories(calories);
+            summaryController.addActivityCalories(calories);
 
         } catch (NumberFormatException ex) {
             view.showErrorMessage("Bitte eine gültige Zahl für die Dauer eingeben.");

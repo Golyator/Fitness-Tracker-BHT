@@ -8,23 +8,22 @@ import database.FoodRepository;
 import model.FoodCalculator;
 import model.FoodRecord;
 import view.FoodViewFx;
-import view.DailySummaryViewFx;
 
 public class FoodControllerFx {
 
     private final FoodViewFx view;
     private final FoodRepository repository;
-    private final DailySummaryViewFx summaryView;
+    private final DailySummaryControllerFx summaryController;
 
     // Einfache In-Memory-Speicherung der Foods
     private final List<FoodEntry> foodEntries = new ArrayList<>();
     private double totalCalories = 0.0;
 
 
-    public FoodControllerFx(FoodViewFx view, FoodRepository repository, DailySummaryViewFx summaryView) {
+    public FoodControllerFx(FoodViewFx view, FoodRepository repository, DailySummaryControllerFx summaryController) {
         this.view = view;
         this.repository = repository;
-        this.summaryView = summaryView;
+        this.summaryController = summaryController;
 
         this.view.getAddFoodButton().setOnAction(event -> onAddFood());
     }
@@ -66,7 +65,7 @@ public class FoodControllerFx {
             view.clearInputs();
 
             // Food-Gesamtkalorien in die Tagesbilanz eintragen
-            summaryView.setFoodCalories(totalCalories);
+            summaryController.setFoodCalories(totalCalories);
 
         } catch (NumberFormatException ex) {
             view.showErrorMessage("Bitte gültige Zahlen für Kalorien pro Einheit und Menge eingeben.");

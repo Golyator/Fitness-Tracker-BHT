@@ -1,5 +1,6 @@
 import controller.ActivityControllerFx;
 import controller.BmrControllerFx;
+import controller.DailySummaryControllerFx;
 import controller.FoodControllerFx;
 import database.ActivityRepository;
 import database.BmrRepository;
@@ -35,10 +36,13 @@ public class MainFx extends Application {
         bmrView.addBelow(foodView.getRoot());
         bmrView.addBelow(summaryView.getRoot());
 
-        // Controller VERKNÜPFEN – mit SummaryView
-        new BmrControllerFx(bmrView, bmrRepository, summaryView);
-        new FoodControllerFx(foodView, foodRepository, summaryView);
-        new ActivityControllerFx(activityView, activityRepository, summaryView);
+        // DailySummary Controller erstellen
+        DailySummaryControllerFx summaryController = new DailySummaryControllerFx(summaryView);
+
+        // Controller VERKNÜPFEN – mit SummaryController
+        new BmrControllerFx(bmrView, bmrRepository, summaryController);
+        new FoodControllerFx(foodView, foodRepository, summaryController);
+        new ActivityControllerFx(activityView, activityRepository, summaryController);
 
         Scene scene = new Scene(bmrView.getRoot(), 450, 650);
         primaryStage.setScene(scene);

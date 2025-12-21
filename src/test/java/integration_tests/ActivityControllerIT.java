@@ -1,6 +1,7 @@
 package integration_tests;
 
 import controller.ActivityControllerFx;
+import controller.DailySummaryControllerFx;
 import database.ActivityRepository;
 import model.ActivityType;
 import model.CurrentUserContext;
@@ -56,15 +57,6 @@ class ActivityControllerFxIT {
         }
     }
 
-    static class TestDailySummaryViewFx extends DailySummaryViewFx {
-        double lastAddedCalories;
-
-        @Override
-        public void addActivityCalories(double calories) {
-            lastAddedCalories = calories;
-        }
-    }
-
     private static void invokeOnAdd(ActivityControllerFx controller) throws Exception {
         Method m = ActivityControllerFx.class.getDeclaredMethod("onAddActivity");
         m.setAccessible(true);
@@ -91,14 +83,15 @@ class ActivityControllerFxIT {
 
             TestActivityViewFx view = new TestActivityViewFx();
             ActivityRepository repository = mock(ActivityRepository.class);
-            TestDailySummaryViewFx summaryView = new TestDailySummaryViewFx();
+            DailySummaryViewFx summaryView = new DailySummaryViewFx();
+            DailySummaryControllerFx summaryController = new DailySummaryControllerFx(summaryView);
 
-            ActivityControllerFx controller = new ActivityControllerFx(view, repository, summaryView);
+            ActivityControllerFx controller = new ActivityControllerFx(view, repository, summaryController);
             invokeOnAdd(controller);
 
             assertEquals("Bitte zuerst im BMR-Rechner ein Profil berechnen.", view.lastError);
             verifyNoInteractions(repository);
-            assertEquals(0.0, summaryView.lastAddedCalories, 0.0001);
+            assertEquals(0.0, summaryController.getTotalActivityCalories(), 0.0001);
         }
     }
 
@@ -116,14 +109,15 @@ class ActivityControllerFxIT {
             view.intensityInput = "mittel";
 
             ActivityRepository repository = mock(ActivityRepository.class);
-            TestDailySummaryViewFx summaryView = new TestDailySummaryViewFx();
+            DailySummaryViewFx summaryView = new DailySummaryViewFx();
+            DailySummaryControllerFx summaryController = new DailySummaryControllerFx(summaryView);
 
-            ActivityControllerFx controller = new ActivityControllerFx(view, repository, summaryView);
+            ActivityControllerFx controller = new ActivityControllerFx(view, repository, summaryController);
             invokeOnAdd(controller);
 
             assertEquals("Bitte eine gültige Zahl für die Dauer eingeben.", view.lastError);
             verifyNoInteractions(repository);
-            assertEquals(0.0, summaryView.lastAddedCalories, 0.0001);
+            assertEquals(0.0, summaryController.getTotalActivityCalories(), 0.0001);
         }
     }
 
@@ -141,14 +135,15 @@ class ActivityControllerFxIT {
             view.intensityInput = "mittel";
 
             ActivityRepository repository = mock(ActivityRepository.class);
-            TestDailySummaryViewFx summaryView = new TestDailySummaryViewFx();
+            DailySummaryViewFx summaryView = new DailySummaryViewFx();
+            DailySummaryControllerFx summaryController = new DailySummaryControllerFx(summaryView);
 
-            ActivityControllerFx controller = new ActivityControllerFx(view, repository, summaryView);
+            ActivityControllerFx controller = new ActivityControllerFx(view, repository, summaryController);
             invokeOnAdd(controller);
 
             assertEquals("Die Dauer muss größer als 0 sein.", view.lastError);
             verifyNoInteractions(repository);
-            assertEquals(0.0, summaryView.lastAddedCalories, 0.0001);
+            assertEquals(0.0, summaryController.getTotalActivityCalories(), 0.0001);
         }
     }
 
@@ -166,14 +161,15 @@ class ActivityControllerFxIT {
             view.intensityInput = "mittel";
 
             ActivityRepository repository = mock(ActivityRepository.class);
-            TestDailySummaryViewFx summaryView = new TestDailySummaryViewFx();
+            DailySummaryViewFx summaryView = new DailySummaryViewFx();
+            DailySummaryControllerFx summaryController = new DailySummaryControllerFx(summaryView);
 
-            ActivityControllerFx controller = new ActivityControllerFx(view, repository, summaryView);
+            ActivityControllerFx controller = new ActivityControllerFx(view, repository, summaryController);
             invokeOnAdd(controller);
 
             assertEquals("Bitte eine Aktivität auswählen.", view.lastError);
             verifyNoInteractions(repository);
-            assertEquals(0.0, summaryView.lastAddedCalories, 0.0001);
+            assertEquals(0.0, summaryController.getTotalActivityCalories(), 0.0001);
         }
     }
 
@@ -191,11 +187,12 @@ class ActivityControllerFxIT {
             view.intensityInput = " ";
 
             ActivityRepository repository = mock(ActivityRepository.class);
-            TestDailySummaryViewFx summaryView = new TestDailySummaryViewFx();
+            DailySummaryViewFx summaryView = new DailySummaryViewFx();
+            DailySummaryControllerFx summaryController = new DailySummaryControllerFx(summaryView);
 
-            ActivityControllerFx controller = new ActivityControllerFx(view, repository, summaryView);
+            ActivityControllerFx controller = new ActivityControllerFx(view, repository, summaryController);
             invokeOnAdd(controller);
-            assertEquals(0.0, summaryView.lastAddedCalories, 0.0001);
+            assertEquals(0.0, summaryController.getTotalActivityCalories(), 0.0001);
         }
     }
 }
