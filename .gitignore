@@ -1,1 +1,8 @@
-.idea/*
+# IntelliJ
+.idea*
+*.iml
+
+target*
+
+# Compiled classes (zur Sicherheit)
+*.class

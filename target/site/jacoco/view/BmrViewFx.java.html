@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BmrViewFx.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fitness-tracker-bht</a> &gt; <a href="index.source.html" class="el_package">view</a> &gt; <span class="el_source">BmrViewFx.java</span></div><h1>BmrViewFx.java</h1><pre class="source lang-java linenums">package view;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+
+public class BmrViewFx {
+
+    private final TextField weightField;
+    private final TextField heightField;
+    private final TextField ageField;
+    private final RadioButton maleButton;
+    private final RadioButton femaleButton;
+    private final Button calculateButton;
+    private final Label resultLabel;
+
+    private final Parent root;
+
+<span class="nc" id="L25">    public BmrViewFx() {</span>
+        // Überschrift
+<span class="nc" id="L27">        Label titleLabel = new Label(&quot;BMR-Rechner&quot;);</span>
+<span class="nc" id="L28">        titleLabel.setStyle(&quot;-fx-font-size: 20px; -fx-font-weight: bold;&quot;);</span>
+
+        // Grid für Labels + Textfelder
+<span class="nc" id="L31">        GridPane formGrid = new GridPane();</span>
+<span class="nc" id="L32">        formGrid.setHgap(10);</span>
+<span class="nc" id="L33">        formGrid.setVgap(10);</span>
+<span class="nc" id="L34">        formGrid.setPadding(new Insets(10));</span>
+
+        // Spalten: 1 = Label, 2 = Eingabefeld (soll mitwachsen)
+<span class="nc" id="L37">        ColumnConstraints colLabel = new ColumnConstraints();</span>
+<span class="nc" id="L38">        ColumnConstraints colField = new ColumnConstraints();</span>
+<span class="nc" id="L39">        colField.setHgrow(Priority.ALWAYS); // Eingabefelder wachsen mit</span>
+<span class="nc" id="L40">        formGrid.getColumnConstraints().addAll(colLabel, colField);</span>
+
+        // Gewicht
+<span class="nc" id="L43">        Label weightLabel = new Label(&quot;Gewicht (kg):&quot;);</span>
+<span class="nc" id="L44">        weightField = new TextField();</span>
+<span class="nc" id="L45">        weightField.setPromptText(&quot;z.B. 70&quot;);</span>
+<span class="nc" id="L46">        weightField.setMaxWidth(Double.MAX_VALUE);</span>
+<span class="nc" id="L47">        formGrid.addRow(0, weightLabel, weightField);</span>
+
+        // Größe
+<span class="nc" id="L50">        Label heightLabel = new Label(&quot;Größe (cm):&quot;);</span>
+<span class="nc" id="L51">        heightField = new TextField();</span>
+<span class="nc" id="L52">        heightField.setPromptText(&quot;z.B. 175&quot;);</span>
+<span class="nc" id="L53">        heightField.setMaxWidth(Double.MAX_VALUE);</span>
+<span class="nc" id="L54">        formGrid.addRow(1, heightLabel, heightField);</span>
+
+        // Alter
+<span class="nc" id="L57">        Label ageLabel = new Label(&quot;Alter (Jahre):&quot;);</span>
+<span class="nc" id="L58">        ageField = new TextField();</span>
+<span class="nc" id="L59">        ageField.setPromptText(&quot;z.B. 30&quot;);</span>
+<span class="nc" id="L60">        ageField.setMaxWidth(Double.MAX_VALUE);</span>
+<span class="nc" id="L61">        formGrid.addRow(2, ageLabel, ageField);</span>
+
+        // Geschlecht
+<span class="nc" id="L64">        Label genderLabel = new Label(&quot;Geschlecht:&quot;);</span>
+<span class="nc" id="L65">        maleButton = new RadioButton(&quot;Männlich&quot;);</span>
+<span class="nc" id="L66">        femaleButton = new RadioButton(&quot;Weiblich&quot;);</span>
+<span class="nc" id="L67">        maleButton.setSelected(true);</span>
+
+<span class="nc" id="L69">        ToggleGroup genderGroup = new ToggleGroup();</span>
+<span class="nc" id="L70">        maleButton.setToggleGroup(genderGroup);</span>
+<span class="nc" id="L71">        femaleButton.setToggleGroup(genderGroup);</span>
+
+<span class="nc" id="L73">        HBox genderBox = new HBox(10, maleButton, femaleButton);</span>
+<span class="nc" id="L74">        genderBox.setAlignment(Pos.CENTER_LEFT);</span>
+        // soll bei Vergrößerung ebenfalls Platz nutzen können
+<span class="nc" id="L76">        genderBox.setMaxWidth(Double.MAX_VALUE);</span>
+<span class="nc" id="L77">        formGrid.addRow(3, genderLabel, genderBox);</span>
+
+        // Button
+<span class="nc" id="L80">        calculateButton = new Button(&quot;Berechnen&quot;);</span>
+<span class="nc" id="L81">        calculateButton.setDefaultButton(true);</span>
+<span class="nc" id="L82">        HBox buttonBox = new HBox(calculateButton);</span>
+<span class="nc" id="L83">        buttonBox.setAlignment(Pos.CENTER);</span>
+<span class="nc" id="L84">        buttonBox.setPadding(new Insets(5, 0, 0, 0));</span>
+
+        // Ergebnis
+<span class="nc" id="L87">        resultLabel = new Label(&quot;Ergebnis: &quot;);</span>
+<span class="nc" id="L88">        resultLabel.setStyle(&quot;-fx-font-size: 14px; -fx-font-weight: bold;&quot;);</span>
+<span class="nc" id="L89">        HBox resultBox = new HBox(resultLabel);</span>
+<span class="nc" id="L90">        resultBox.setAlignment(Pos.CENTER_LEFT);</span>
+<span class="nc" id="L91">        resultBox.setPadding(new Insets(5, 0, 0, 0));</span>
+<span class="nc" id="L92">        resultBox.setMaxWidth(Double.MAX_VALUE);</span>
+
+        // Root-Layout
+<span class="nc" id="L95">        VBox rootBox = new VBox(15, titleLabel, formGrid, buttonBox, resultBox);</span>
+<span class="nc" id="L96">        rootBox.setPadding(new Insets(20));</span>
+<span class="nc" id="L97">        rootBox.setAlignment(Pos.TOP_CENTER);</span>
+<span class="nc" id="L98">        rootBox.setFillWidth(true); // Kinder dürfen volle Breite nutzen</span>
+
+        // Formular soll in der VBox mitwachsen
+<span class="nc" id="L101">        VBox.setVgrow(formGrid, Priority.ALWAYS);</span>
+
+        // &quot;Card&quot;-Container für Inhalt, damit dieser sich vom Hintergrund abhebt
+<span class="nc" id="L104">        VBox card = new VBox(15, titleLabel, formGrid, buttonBox, resultBox);</span>
+<span class="nc" id="L105">        card.setPadding(new Insets(20));</span>
+<span class="nc" id="L106">        card.setAlignment(Pos.TOP_CENTER);</span>
+<span class="nc" id="L107">        card.setFillWidth(true);</span>
+<span class="nc" id="L108">        card.setMaxWidth(420);</span>
+<span class="nc" id="L109">        card.setStyle(</span>
+                &quot;-fx-background-color: white;&quot; +
+                        &quot;-fx-background-radius: 12;&quot; +
+                        &quot;-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 15, 0.2, 0, 4);&quot;
+        );
+
+<span class="nc" id="L115">        VBox.setVgrow(card, Priority.ALWAYS);</span>
+
+        // Äußerer Root-Container mit schönem Verlauf
+<span class="nc" id="L118">        VBox outerRoot = new VBox(card);</span>
+<span class="nc" id="L119">        outerRoot.setAlignment(Pos.CENTER);</span>
+<span class="nc" id="L120">        outerRoot.setPadding(new Insets(30));</span>
+<span class="nc" id="L121">        outerRoot.setFillWidth(true);</span>
+
+<span class="nc" id="L123">        outerRoot.setStyle(</span>
+                &quot;-fx-background-color: linear-gradient(to bottom right, #1e3c72, #2a5298);&quot; +
+                        &quot;-fx-font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;&quot;
+        );
+
+<span class="nc" id="L128">        this.root = outerRoot;</span>
+<span class="nc" id="L129">    }</span>
+
+    // Root für Scene
+    public Parent getRoot() {
+<span class="nc" id="L133">        return root;</span>
+    }
+
+    // Zugriffsmethoden
+    public String getWeightInput() {
+<span class="nc" id="L138">        return weightField.getText();</span>
+    }
+
+    public String getHeightInput() {
+<span class="nc" id="L142">        return heightField.getText();</span>
+    }
+
+    public String getAgeInput() {
+<span class="nc" id="L146">        return ageField.getText();</span>
+    }
+
+    public String getGenderInput() {
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (maleButton.isSelected()) return &quot;Männlich&quot;;</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        if (femaleButton.isSelected()) return &quot;Weiblich&quot;;</span>
+<span class="nc" id="L152">        return &quot;Unbekannt&quot;;</span>
+    }
+
+    public Button getCalculateButton() {
+<span class="nc" id="L156">        return calculateButton;</span>
+    }
+
+    public void setBmrResult(String result) {
+<span class="nc" id="L160">        resultLabel.setText(result);</span>
+<span class="nc" id="L161">    }</span>
+
+    public void showErrorMessage(String message) {
+<span class="nc" id="L164">        Alert alert = new Alert(Alert.AlertType.ERROR);</span>
+<span class="nc" id="L165">        alert.setTitle(&quot;Eingabefehler&quot;);</span>
+<span class="nc" id="L166">        alert.setHeaderText(null);</span>
+<span class="nc" id="L167">        alert.setContentText(message);</span>
+<span class="nc" id="L168">        alert.showAndWait();</span>
+<span class="nc" id="L169">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
