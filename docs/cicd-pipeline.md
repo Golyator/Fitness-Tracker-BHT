@@ -34,9 +34,7 @@
 
 ### Automatische Versionierung
 
-- Format: 1.0.[Git-Commit-Count]
-- Beispiel: 1.0.42
-- Build-Info-Datei wird generiert
+- 1.0.124
 
 ## Quality Gates
 
