@@ -1,5 +1,3 @@
-# CI/CD Pipeline
-
 **Platform:** GitHub Actions
 
 ## Automatisierte Schritte
