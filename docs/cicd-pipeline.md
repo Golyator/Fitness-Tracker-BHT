@@ -32,6 +32,12 @@
 - Pipeline-Runs: [GitHub Actions](https://github.com/Golyator/Fitness-Tracker-BHT/actions)
 - Letzter erfolgreicher Build: [URL](https://github.com/Golyator/Fitness-Tracker-BHT/actions/runs/20677516271)
 
+### Automatische Versionierung
+
+- Format: 1.0.[Git-Commit-Count]
+- Beispiel: 1.0.42
+- Build-Info-Datei wird generiert
+
 ## Quality Gates
 
 - ✅ Code Coverage muss ≥ 50% sein
@@ -39,3 +45,9 @@
 - ✅ Code muss kompilieren
 - ✅ Maven Build erfolgreich
 - ✅ Artefakte (Applikation, Tests und Test Coverage Report) werden erfolgreich erstellt
+
+### Branch-Strategie
+
+- `main`: Stable releases
+- `develop`: Integration branch
+- `feature/*`: Feature branches werden getestet
