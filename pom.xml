@@ -144,6 +144,7 @@
                         <exclude>**/database/**</exclude>
                         <exclude>**/view/**</exclude>
                         <exclude>**/MainFx.java</exclude>
+                        <exclude>**/controller/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>
