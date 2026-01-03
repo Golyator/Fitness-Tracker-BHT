@@ -57,6 +57,9 @@ jobs:
           name: application-jar
           path: target/*.jar
 
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+
       - name: Quality Gate - Coverage Check
         run: |
           mvn jacoco:report --batch-mode
