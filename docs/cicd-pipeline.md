@@ -34,7 +34,9 @@
 
 ### Automatische Versionierung
 
-- 1.0.124
+- Format: 1.0.[Git-Commit-Count]
+- Beispiel: 1.0.42
+- Build-Info-Datei wird generiert
 
 ## Quality Gates
 
@@ -48,4 +50,4 @@
 
 - `main`: Stable releases
 - `develop`: Integration branch
-- `feature/*`: Feature branches werden getestet
+- `feature-*`: Feature branches werden getestet
