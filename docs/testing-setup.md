@@ -1,0 +1,4 @@
+- Framework: JUnit 5
+- Setup abgeschlossen: [06.12.2025]
+- Test-Verzeichnis: `src/test/java/`
+- Ausführung: [IntelliJ | Visual Code / mvn test ]
