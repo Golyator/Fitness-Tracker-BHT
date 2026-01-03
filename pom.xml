@@ -98,10 +98,8 @@
                 <configuration>
                     <useModulePath>false</useModulePath>
                     <useSystemClassLoader>true</useSystemClassLoader>
-                    <!-- Only add-opens for java.base is needed -->
-                    <argLine>
-                        --add-opens java.base/sun.nio.ch=ALL-UNNAMED
-                    </argLine>
+                    <!-- JaCoCo agent + add-opens for java.base -->
+                    <argLine>@{argLine} --add-opens java.base/sun.nio.ch=ALL-UNNAMED</argLine>
                 </configuration>
             </plugin>
 
@@ -124,6 +122,8 @@
                 <version>0.8.11</version>
                 <executions>
                     <execution>
+                        <id>prepare-agent</id>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
