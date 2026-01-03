@@ -3,6 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+    <scm>
+        <connection>scm:git:https://github.com/Golyator/Fitness-Tracker-BHT.git</connection>
+        <developerConnection>scm:git:https://github.com/Golyator/Fitness-Tracker-BHT.git</developerConnection>
+        <url>https://github.com/Golyator/Fitness-Tracker-BHT</url>
+    </scm>
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.bht</groupId>
