@@ -11,6 +11,7 @@ Das Team entwickelt eine mobile Gesundheits-Tagebuch-App, die Nutzer:innen dabei
 ![CI/CD](https://github.com/Golyator/Fitness-Tracker-BHT/workflows/CI/CD%20Pipeline/badge.svg)
 
 ## Status
+
 - Build: ✅ Passing
-- Tests: ✅ XX/XX passed
-- Coverage: XX%
+- Tests: ✅ 30/30 passed
+- Coverage: 72%
