@@ -56,3 +56,21 @@ jobs:
         with:
           name: application-jar
           path: target/*.jar
+
+      - name: Quality Gate - Coverage Check
+        run: |
+          mvn jacoco:report --batch-mode
+          COVERAGE=$(xmllint --xpath "string(//report/counter[@type='LINE']/@covered)" target/site/jacoco/jacoco.xml)
+          MISSED=$(xmllint --xpath "string(//report/counter[@type='LINE']/@missed)" target/site/jacoco/jacoco.xml)
+          TOTAL=$((COVERAGE + MISSED))
+          if [ "$TOTAL" -eq 0 ]; then
+            PERCENT=0
+          else
+            PERCENT=$((COVERAGE * 100 / TOTAL))
+          fi
+          echo "Code Coverage: $PERCENT%"
+          if [ "$PERCENT" -lt 50 ]; then
+            echo "❌ Coverage unter 50% - Build fehlgeschlagen!"
+            exit 1
+          fi
+          echo "✅ Coverage OK: $PERCENT%"
